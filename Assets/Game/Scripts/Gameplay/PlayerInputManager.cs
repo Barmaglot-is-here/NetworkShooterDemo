@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using Assets.Game.Scripts.Gameplay.Shooting;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,8 @@ namespace Assets.Scripts.Gameplay
         private MovementComponent _movementComponent;
         [SerializeField]
         private RotationComponent _rotationComponent;
+        [SerializeField]
+        private Weapon _weapon;
 
         private InputActions _inputActions;
 
@@ -33,6 +36,7 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Move.canceled += OnMoveCanceled;
             PlayerActions.Jump.performed += OnJumpPerformed;
             PlayerActions.Look.performed += OnLookPerformed;
+            PlayerActions.Attack.performed += OnAtackPerformed;
         }
 
 
@@ -46,6 +50,8 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Move.performed -= OnMovePerformed;
             PlayerActions.Move.canceled -= OnMoveCanceled;
             PlayerActions.Jump.performed -= OnJumpPerformed;
+            PlayerActions.Look.performed -= OnLookPerformed;
+            PlayerActions.Attack.performed -= OnAtackPerformed;
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context) 
@@ -59,5 +65,8 @@ namespace Assets.Scripts.Gameplay
 
         private void OnLookPerformed(InputAction.CallbackContext context)
             => _rotationComponent.RotateServerRpc(context.ReadValue<Vector2>());
+
+        private void OnAtackPerformed(InputAction.CallbackContext context)
+            => _weapon.Shoot();
     }
 }

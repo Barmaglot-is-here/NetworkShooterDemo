@@ -1,5 +1,4 @@
-﻿using System;
-using Unity.Netcode;
+﻿using Assets.Game.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,8 @@ namespace Assets.Scripts.UI
         private Button _hostButton;
         [SerializeField]
         private Button _connectButton;
+        [SerializeField]
+        private EntryPoint _entryPoint;
 
         private void OnEnable()
         {
@@ -26,14 +27,14 @@ namespace Assets.Scripts.UI
 
         private void OnHostButtonClick()
         {
-            NetworkManager.Singleton.StartHost();
+            _entryPoint.Host();
 
             gameObject.SetActive(false);
         }
 
         private void OnConnectButtonClick()
         {
-            NetworkManager.Singleton.StartClient();
+            _entryPoint.Connect();
 
             gameObject.SetActive(false);
         }

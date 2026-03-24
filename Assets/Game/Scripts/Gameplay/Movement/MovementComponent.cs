@@ -13,8 +13,6 @@ public class MovementComponent : NetworkBehaviour
 
     private float _verticalVelocity;
 
-    private bool _isGrounded;
-
     private Vector3 _direction;
     private CharacterController _characterController;
 
@@ -48,7 +46,11 @@ public class MovementComponent : NetworkBehaviour
     private void ApplyGravityServerRpc()
     {
         if (_characterController.isGrounded)
+        {
+            _verticalVelocity = 0;
+
             return;
+        }
 
         _verticalVelocity += _gravity * Time.deltaTime;
 
