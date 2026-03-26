@@ -36,7 +36,7 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Move.canceled += OnMoveCanceled;
             PlayerActions.Jump.performed += OnJumpPerformed;
             PlayerActions.Look.performed += OnLookPerformed;
-            PlayerActions.Attack.performed += OnAtackPerformed;
+            PlayerActions.Shoot.performed += OnShootPerformed;
         }
 
 
@@ -51,7 +51,7 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Move.canceled -= OnMoveCanceled;
             PlayerActions.Jump.performed -= OnJumpPerformed;
             PlayerActions.Look.performed -= OnLookPerformed;
-            PlayerActions.Attack.performed -= OnAtackPerformed;
+            PlayerActions.Shoot.performed -= OnShootPerformed;
         }
 
         private void OnMovePerformed(InputAction.CallbackContext context) 
@@ -66,7 +66,7 @@ namespace Assets.Scripts.Gameplay
         private void OnLookPerformed(InputAction.CallbackContext context)
             => _rotationComponent.RotateServerRpc(context.ReadValue<Vector2>());
 
-        private void OnAtackPerformed(InputAction.CallbackContext context)
+        private void OnShootPerformed(InputAction.CallbackContext context)
             => _weapon.Shoot();
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Shooting
 {
@@ -31,8 +32,11 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
                 return;
 
             var bullet = Object.Instantiate(_bulletPrefab, _shootPoint.position, transform.rotation);
+            var networkObject = bullet.GetComponent<NetworkObject>();
 
-            bullet.AddForce(Vector3.left * _shootForce);
+            networkObject.Spawn();
+
+            bullet.AddForce(Vector3.forward * _shootForce);
 
             Clip.AmmoCount.Value--;
         }

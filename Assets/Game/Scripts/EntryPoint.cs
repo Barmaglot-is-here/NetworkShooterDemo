@@ -1,5 +1,6 @@
 ﻿using Assets.Game.Scripts.Infrastructure.Spawn;
-using Unity.Netcode;
+using Assets.Game.Scripts.Services;
+using Assets.Scripts.UI;
 using UnityEngine;
 
 namespace Assets.Game.Scripts
@@ -7,19 +8,15 @@ namespace Assets.Game.Scripts
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField]
-        private CharacterSpawner _characterSpawner;
-
-        public void Host()
+        private CharacterSpawnService _spawnService;
+        [SerializeField]
+        private LobbyScreen _lobbyScreen;
+        
+        private void Start()
         {
-            NetworkManager.Singleton.StartHost();
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            LobbyService lobby = new(_spawnService);
 
-            _characterSpawner.Spawn(0, NetworkManager.Singleton.LocalClientId);
+            _lobbyScreen.Bind(lobby);
         }
-
-        private void OnClientConnected(ulong clientId) 
-            => _characterSpawner.Spawn(1, clientId);
-
-        public void Connect() => NetworkManager.Singleton.StartClient();
     }
 }

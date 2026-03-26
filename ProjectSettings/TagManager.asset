@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - DamageObject
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Character
   - Water
   - UI
   - 

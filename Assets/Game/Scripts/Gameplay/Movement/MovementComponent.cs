@@ -1,3 +1,5 @@
+using Assets.Game.Scripts.Gameplay.GroundCheckSystem;
+using Assets.Game.Scripts.View;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -14,11 +16,18 @@ public class MovementComponent : NetworkBehaviour
     private float _verticalVelocity;
 
     private Vector3 _direction;
+
     private CharacterController _characterController;
+    private GroundCheckComponent _groundCheckComponent;
+    private CharacterAnimationController _animationController;
+
+    private bool IsGrounded => _groundCheckComponent.IsGrounded;
 
     private void Awake()
     {
-        _characterController = GetComponent<CharacterController>();
+        _characterController    = GetComponent<CharacterController>();
+        _groundCheckComponent   = GetComponent<GroundCheckComponent>();
+        _animationController    = GetComponent<CharacterAnimationController>();
     }
 
     private void Update()
@@ -28,25 +37,37 @@ public class MovementComponent : NetworkBehaviour
 
         MoveServerRpc(_direction);
         ApplyGravityServerRpc();
+
+        _animationController.SetGroundedState(IsGrounded);
     }
 
-    public void SetDirection(Vector2 direction) 
-        => _direction = new(direction.x, 0, direction.y);
+    public void SetDirection(Vector2 direction)
+    {
+        _direction = new(direction.x, 0, direction.y);
+
+        var speed = direction == Vector2.zero ? 0 : _movementSpeed;
+
+        _animationController.SetMovementSpeed(speed);
+    }
 
     [ServerRpc]
     public void JumpServerRpc()
     {
-        if (!_characterController.isGrounded)
+        if (!IsGrounded)
             return;
 
         _verticalVelocity = _jumpForce;
+
+        _animationController.Jump();
     }
 
     [ServerRpc]
     private void ApplyGravityServerRpc()
     {
-        if (_characterController.isGrounded)
+        if (_verticalVelocity < 0 && IsGrounded)
         {
+            _animationController.JumpOver();
+
             _verticalVelocity = 0;
 
             return;

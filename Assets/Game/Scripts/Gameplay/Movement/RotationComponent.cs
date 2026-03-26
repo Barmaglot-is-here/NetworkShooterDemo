@@ -1,7 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class RotationComponent : NetworkBehaviour
 {
     [SerializeField]
@@ -16,12 +15,8 @@ public class RotationComponent : NetworkBehaviour
 
     private float _verticalAngle;
 
-    private CharacterController _characterController;
-
     private void Awake()
     {
-        _characterController = GetComponent<CharacterController>();
-
         _verticalAngle = _headTransform.localEulerAngles.x;
     }
 
