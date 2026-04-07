@@ -1,4 +1,5 @@
 ﻿using Assets.Game.Scripts.Server;
+using Assets.Game.Scripts.UI.Controls;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Assets.Scripts.UI
     public class LobbyScreen : NetworkBehaviour
     {
         [SerializeField]
-        private TMP_Text _playerCount;
+        private TMP_Text _playersCount;
         
         [SerializeField]
         private Button _hostButton;
@@ -17,6 +18,9 @@ namespace Assets.Scripts.UI
         private Button _connectButton;
         [SerializeField]
         private Button _runButton;
+
+        [SerializeField]
+        private GameObject _loadingIndicator;
 
         private ServerManager _connectionService;
 
@@ -31,14 +35,10 @@ namespace Assets.Scripts.UI
             _connectionService = connectionService;
 
             _connectionService.OnClientCountChanged += OnClientCountChanged;
-
-            //Temp
-            //_hostButton.onClick.Invoke();
-            //_runButton.onClick.Invoke();
         }
 
         private void OnClientCountChanged(int count)
-            => _playerCount.SetText($"Player count: {count}");
+            => _playersCount.SetText($"Players count: {count}");
 
         private void OnEnable()
         {
@@ -77,12 +77,13 @@ namespace Assets.Scripts.UI
 
             HideHostButtons();
 
+            _loadingIndicator.SetActive(true);
             ShowPlayerCount(true);
         }
 
         private void ShowPlayerCount(bool state)
         {
-            _playerCount.transform.parent.gameObject.SetActive(state);
+            _playersCount.transform.parent.gameObject.SetActive(state);
         }
 
         private void OnRunButtonClick()

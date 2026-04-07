@@ -22,5 +22,10 @@ namespace Assets.Game.Scripts.UI
 
         private void OnHealthChanged(int value) 
             => _text.SetText(value.ToString());
+
+        private void OnDestroy()
+        {
+            _health.Value.Changed -= OnHealthChanged;
+        }
     }
 }

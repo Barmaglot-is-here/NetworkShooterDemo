@@ -29,5 +29,11 @@ namespace Assets.Game.Scripts.UI
         {
             _ammoText.text = $"{weaponClip.AmmoCount.Value} / {ammoPouch.AmmoCount.Value}";
         }
+
+        private void OnDestroy()
+        {
+            _weaponClip.AmmoCount.Changed -= OnAmmoCountChanged;
+            _ammoPouch.AmmoCount.Changed -= OnAmmoCountChanged;
+        }
     }
 }

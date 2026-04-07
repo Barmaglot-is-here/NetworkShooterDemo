@@ -1,5 +1,8 @@
-﻿using Unity.Netcode;
+﻿using Assets.Rx;
+using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
+using SM = Assets.Game.Scripts.Gameplay.Shooting.ShootingMode;
 
 namespace Assets.Game.Scripts.Gameplay.Shooting
 {
@@ -10,20 +13,40 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
         [SerializeField]
         private float _shootForce;
         [SerializeField]
+        private float _rpm;
+        [SerializeField]
+        private float _reloadTime;
+        [SerializeField]
         private Transform _shootPoint;
 
-        private AmmoPouch _ammoPouch;
+        private WaitForSeconds _realodDelay;
+        private WaitForSeconds _shootDelay;
 
+        private Coroutine _realodCoroutine;
+        private Coroutine _shootCoroutine;
+
+        private bool _cancelShooting;
+
+        public AmmoPouch Pouch { get; private set; }
         public WeaponClip Clip { get; private set; }
+        public Rx<ShootingMode> ShootingMode { get; private set; }
 
         private void Awake()
         {
             Clip = new(30);
+
+            _realodDelay    = new(_reloadTime);
+            _shootDelay     = new(60 / _rpm);
+
+            ShootingMode = new(SM.Multiple);
+
+            //Temp
+            Connect(new(120, 120));
         }
 
         public void Connect(AmmoPouch ammoPouch)
         {
-            _ammoPouch = ammoPouch;
+            Pouch = ammoPouch;
         }
 
         public void Shoot()
@@ -31,9 +54,27 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
             if (Clip.IsEmpty)
                 return;
 
-            SpawnBulletServerRpc();
+            _cancelShooting = false;
 
-            Clip.AmmoCount.Value--;
+            _shootCoroutine ??= StartCoroutine(ShootCoroutine());
+        }
+
+        public void CancelShooting()
+        {
+            _cancelShooting = true;
+        }
+
+        public void SwitchShootingMode()
+        {
+            ShootingMode.Value = ShootingMode.Value == SM.Single ? SM.Multiple : SM.Single;
+        }
+
+        public void Reload()
+        {
+            if (_shootCoroutine != null)
+                CancelShooting();
+
+            _realodCoroutine ??= StartCoroutine(ReloadCoroutine());
         }
 
         [ServerRpc]
@@ -46,9 +87,31 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
             bullet.AddForce(Vector3.forward * _shootForce);
         }
 
-        public void Reload()
+        private IEnumerator ShootCoroutine()
         {
+            do
+            {
+                SpawnBulletServerRpc();
 
+                Clip.AmmoCount.Value--;
+
+                yield return _shootDelay;
+            } while (!Clip.IsEmpty && ShootingMode.Value == SM.Multiple && !_cancelShooting);
+
+            _shootCoroutine = null;
+        }
+
+        private IEnumerator ReloadCoroutine()
+        {
+            yield return _realodDelay;
+
+            int difference = Clip.AmmoCountMax - Clip.AmmoCount.Value;
+
+            Pouch.AmmoCount.Value -= difference;
+
+            Clip.AmmoCount.Value = 30;
+
+            _realodCoroutine = null;
         }
     }
 }

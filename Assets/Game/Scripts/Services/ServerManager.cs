@@ -46,7 +46,7 @@ namespace Assets.Game.Scripts.Server
                 return false;
 
             NetworkManager.Singleton.StartClient();
-                
+
             return true;
         }
 

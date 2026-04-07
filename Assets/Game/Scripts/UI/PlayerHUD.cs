@@ -10,11 +10,14 @@ namespace Assets.Game.Scripts.UI
         private HealthView _healthView;
         [SerializeField]
         private AmmoView _ammoView;
+        [SerializeField]
+        private ShootingModeView _shootingModeView;
 
         public void Bind(HealthComponent health, Weapon weapon)
         {
             _healthView.Bind(health);
-            _ammoView.Bind(weapon.Clip, new(30, 60));
+            _ammoView.Bind(weapon.Clip, weapon.Pouch);
+            _shootingModeView.Bind(weapon.ShootingMode);
         }
     }
 }

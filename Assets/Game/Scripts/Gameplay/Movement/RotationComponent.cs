@@ -29,9 +29,8 @@ public class RotationComponent : NetworkBehaviour
 
     private void RotateBody(float angle)
     {
-        var currentRotation = transform.rotation;
-
         angle = angle * Time.deltaTime * _sencitivity;
+
         transform.Rotate(0, angle, 0);
     }
 
