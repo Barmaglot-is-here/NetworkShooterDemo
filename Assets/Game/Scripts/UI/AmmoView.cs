@@ -17,18 +17,17 @@ namespace Assets.Game.Scripts.UI
             _weaponClip = weaponClip;
             _ammoPouch  = ammoPouch;
 
-            _weaponClip.AmmoCount.Changed   += OnAmmoCountChanged;
-            _ammoPouch.AmmoCount.Changed    += OnAmmoCountChanged;
+            _weaponClip.AmmoCount.Changed += OnAmmoCountChanged;
+            _ammoPouch.AmmoCount.Changed  += OnAmmoCountChanged;
 
             UpdateText(weaponClip, ammoPouch);
         }
 
-        private void OnAmmoCountChanged(int value) 
-            => UpdateText(_weaponClip, _ammoPouch);
+        private void OnAmmoCountChanged(int value) => UpdateText(_weaponClip, _ammoPouch);
 
         private void UpdateText(WeaponClip weaponClip, AmmoPouch ammoPouch)
         {
-            _ammoText.text = $"{weaponClip.AmmoCount} / {ammoPouch.AmmoCount}";
+            _ammoText.text = $"{weaponClip.AmmoCount.Value} / {ammoPouch.AmmoCount.Value}";
         }
     }
 }

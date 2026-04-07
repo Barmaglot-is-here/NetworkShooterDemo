@@ -1,15 +1,16 @@
-﻿using Assets.Game.Scripts.Services;
+﻿using Assets.Game.Scripts.Server;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-    public class LobbyScreen : MonoBehaviour
+    public class LobbyScreen : NetworkBehaviour
     {
         [SerializeField]
         private TMP_Text _playerCount;
-
+        
         [SerializeField]
         private Button _hostButton;
         [SerializeField]
@@ -17,23 +18,23 @@ namespace Assets.Scripts.UI
         [SerializeField]
         private Button _runButton;
 
-        private LobbyService _lobby;
+        private ServerManager _connectionService;
 
         private void Start()
         {
             _runButton.gameObject.SetActive(false);
+            ShowPlayerCount(false);
         }
 
-        public void Bind(LobbyService lobby)
+        public void Bind(ServerManager connectionService)
         {
-            _lobby = lobby;
+            _connectionService = connectionService;
 
-            _lobby.OnClientCountChanged += OnClientCountChanged;
-
+            _connectionService.OnClientCountChanged += OnClientCountChanged;
 
             //Temp
-            _hostButton.onClick.Invoke();
-            _runButton.onClick.Invoke();
+            //_hostButton.onClick.Invoke();
+            //_runButton.onClick.Invoke();
         }
 
         private void OnClientCountChanged(int count)
@@ -50,15 +51,18 @@ namespace Assets.Scripts.UI
         {
             _hostButton.onClick.RemoveListener(OnHostButtonClick);
             _connectButton.onClick.RemoveListener(OnConnectButtonClick);
+            _runButton.onClick.RemoveListener(OnRunButtonClick);
         }
 
         private void OnHostButtonClick()
         {
-            _lobby.Host();
+            _connectionService.Host();
 
             HideHostButtons();
 
             _runButton.gameObject.SetActive(true);
+
+            ShowPlayerCount(true);
         }
 
         private void HideHostButtons()
@@ -69,16 +73,25 @@ namespace Assets.Scripts.UI
 
         private void OnConnectButtonClick()
         {
-            _lobby.TryConnect();
+            _connectionService.TryConnect();
 
-            _hostButton.gameObject.SetActive(false);
+            HideHostButtons();
+
+            ShowPlayerCount(true);
+        }
+
+        private void ShowPlayerCount(bool state)
+        {
+            _playerCount.transform.parent.gameObject.SetActive(state);
         }
 
         private void OnRunButtonClick()
         {
-            _lobby.Run();
-
-            gameObject.SetActive(false);
+            _connectionService.Run();
+            HideClientRpc();
         }
+
+        [ClientRpc]
+        private void HideClientRpc() => gameObject.SetActive(false);
     }
 }

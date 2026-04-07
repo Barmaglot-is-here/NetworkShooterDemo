@@ -39,7 +39,6 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Shoot.performed += OnShootPerformed;
         }
 
-
         public override void OnNetworkDespawn()
         {
             if (!IsOwner)

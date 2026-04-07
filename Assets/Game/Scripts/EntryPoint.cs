@@ -1,5 +1,5 @@
-﻿using Assets.Game.Scripts.Infrastructure.Spawn;
-using Assets.Game.Scripts.Services;
+﻿using Assets.Game.Scripts.Server;
+using Assets.Game.Scripts.Server.Spawn;
 using Assets.Scripts.UI;
 using UnityEngine;
 
@@ -11,12 +11,12 @@ namespace Assets.Game.Scripts
         private CharacterSpawnService _spawnService;
         [SerializeField]
         private LobbyScreen _lobbyScreen;
-        
+
         private void Start()
         {
-            LobbyService lobby = new(_spawnService);
+            ServerManager connectionService = new(_spawnService, 6);
 
-            _lobbyScreen.Bind(lobby);
+            _lobbyScreen.Bind(connectionService);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Game.Scripts.Infrastructure.Spawn
+namespace Assets.Game.Scripts.Server.Spawn
 {
     public class SpawnPoint : MonoBehaviour
     {

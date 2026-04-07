@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Shooting
 {
-    public class Weapon : MonoBehaviour
+    public class Weapon : NetworkBehaviour
     {
         [SerializeField]
         private Bullet _bulletPrefab;
@@ -31,14 +31,19 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
             if (Clip.IsEmpty)
                 return;
 
-            var bullet = Object.Instantiate(_bulletPrefab, _shootPoint.position, transform.rotation);
-            var networkObject = bullet.GetComponent<NetworkObject>();
-
-            networkObject.Spawn();
-
-            bullet.AddForce(Vector3.forward * _shootForce);
+            SpawnBulletServerRpc();
 
             Clip.AmmoCount.Value--;
+        }
+
+        [ServerRpc]
+        private void SpawnBulletServerRpc()
+        {
+            var bullet          = Instantiate(_bulletPrefab, _shootPoint.position, transform.rotation);
+            var networkObject   = bullet.GetComponent<NetworkObject>();
+
+            networkObject.SpawnWithOwnership(OwnerClientId, true);
+            bullet.AddForce(Vector3.forward * _shootForce);
         }
 
         public void Reload()

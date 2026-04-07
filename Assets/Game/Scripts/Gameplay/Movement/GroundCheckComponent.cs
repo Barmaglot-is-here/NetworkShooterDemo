@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.GroundCheckSystem
 {
@@ -14,13 +15,21 @@ namespace Assets.Game.Scripts.Gameplay.GroundCheckSystem
 
         public bool IsGrounded { get; private set; }
 
+        public event Action<bool> OnStateChanged;
+
         private void Update()
         {
+
             Vector3 spherePosition = new (transform.position.x, 
                                           transform.position.y - GroundedOffset,
                                           transform.position.z);
-            IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, _groundLayers,
-                                             QueryTriggerInteraction.Ignore);
+            bool sphereOverlap = Physics.CheckSphere(spherePosition, GroundedRadius, _groundLayers,
+                                                     QueryTriggerInteraction.Ignore);
+
+            if (IsGrounded != sphereOverlap)
+                OnStateChanged.Invoke(sphereOverlap);
+
+            IsGrounded = sphereOverlap;
         }
     }
 }

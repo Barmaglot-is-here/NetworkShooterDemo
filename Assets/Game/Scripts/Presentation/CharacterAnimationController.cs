@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Assets.Game.Scripts.View
 {
     [RequireComponent(typeof(Animator))]
-    public class CharacterAnimationController : MonoBehaviour
+    public class CharacterAnimationController : NetworkBehaviour
     {
         [SerializeField]
         private float _animationTransitionSpeed = 0.2f;
@@ -29,7 +30,13 @@ namespace Assets.Game.Scripts.View
             _animIDMotionSpeed  = Animator.StringToHash("MotionSpeed");
         }
 
-        public void SetMovementSpeed(float speed)
+        public override void OnNetworkSpawn()
+        {
+            enabled = IsOwner;
+        }
+
+        [ServerRpc]
+        public void SetMovementSpeedServerRpc(float speed)
         {
             _animator.SetFloat(_animIDMotionSpeed, speed == 0 ? 0 : 1);
 
@@ -42,9 +49,10 @@ namespace Assets.Game.Scripts.View
             _animator.SetBool(_animIDJump, false);
         }
 
-        private void Update() => UpdateMovement();
+        private void Update() => UpdateMovementServerRpc();
 
-        private void UpdateMovement()
+        [ServerRpc]
+        private void UpdateMovementServerRpc()
         {
             _animationTransitionTime += _animationTransitionSpeed * Time.deltaTime;
 

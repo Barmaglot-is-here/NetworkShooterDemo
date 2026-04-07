@@ -4,18 +4,15 @@ using UnityEngine;
 
 namespace Assets.Game.Scripts.UI
 {
-    public class PlayerUI : MonoBehaviour
+    public class PlayerHUD : MonoBehaviour
     {
         [SerializeField]
         private HealthView _healthView;
         [SerializeField]
         private AmmoView _ammoView;
 
-        public void Bind(GameObject character)
+        public void Bind(HealthComponent health, Weapon weapon)
         {
-            var health = character.GetComponent<HealthComponent>();
-            var weapon = character.GetComponentInChildren<Weapon>();
-
             _healthView.Bind(health);
             _ammoView.Bind(weapon.Clip, new(30, 60));
         }

@@ -28,17 +28,20 @@ public class MovementComponent : NetworkBehaviour
         _characterController    = GetComponent<CharacterController>();
         _groundCheckComponent   = GetComponent<GroundCheckComponent>();
         _animationController    = GetComponent<CharacterAnimationController>();
+
+        _groundCheckComponent.OnStateChanged += OnGroundStateChanged;
     }
 
-    private void Update()
+    private void OnGroundStateChanged(bool isGrounded) 
+        => _animationController.SetGroundedState(isGrounded);
+
+    private void FixedUpdate()
     {
         if (!IsOwner)
             return;
 
         MoveServerRpc(_direction);
         ApplyGravityServerRpc();
-
-        _animationController.SetGroundedState(IsGrounded);
     }
 
     public void SetDirection(Vector2 direction)
@@ -47,7 +50,7 @@ public class MovementComponent : NetworkBehaviour
 
         var speed = direction == Vector2.zero ? 0 : _movementSpeed;
 
-        _animationController.SetMovementSpeed(speed);
+        _animationController.SetMovementSpeedServerRpc(speed);
     }
 
     [ServerRpc]
@@ -69,19 +72,20 @@ public class MovementComponent : NetworkBehaviour
             _animationController.JumpOver();
 
             _verticalVelocity = 0;
-
+            
             return;
         }
 
-        _verticalVelocity += _gravity * Time.deltaTime;
+        _verticalVelocity += _gravity;
 
-        var velocity    = _characterController.velocity;
-        velocity        = new Vector3(0, _verticalVelocity, 0);
+        var velocity = new Vector3(0, _verticalVelocity, 0);
 
         _characterController.Move(velocity);
     }
 
     [ServerRpc]
-    private void MoveServerRpc(Vector3 direction) 
-        => _characterController.Move(transform.rotation * _direction * _movementSpeed * Time.deltaTime);
+    private void MoveServerRpc(Vector3 direction)
+    {
+        _characterController.Move(transform.rotation * direction * _movementSpeed);
+    }
 }

@@ -1,10 +1,13 @@
-﻿using Assets.Game.Scripts.UI;
+﻿using Assets.Game.Scripts.Gameplay;
+using Assets.Game.Scripts.Gameplay.Camera;
+using Assets.Game.Scripts.Gameplay.Shooting;
+using Assets.Game.Scripts.UI;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Assets.Game.Scripts.Infrastructure.Spawn
+namespace Assets.Game.Scripts.Server.Spawn
 {
-    public class CharacterSpawnService : MonoBehaviour
+    public class CharacterSpawnService : NetworkBehaviour
     {
         [SerializeField]
         private GameObject _prefab;
@@ -15,18 +18,52 @@ namespace Assets.Game.Scripts.Infrastructure.Spawn
         private SpawnPoint _spawnPointTeam2;
 
         [SerializeField]
-        private PlayerUI _playerUI;
+        private PlayerHUD _playerHUD;
 
-        public void Spawn(int team, ulong clientId)
+        [ServerRpc]
+        public void SpawnServerRpc(int team, ulong clientId)
         {
-            var spawnPoint = team == 0 ? _spawnPointTeam1 : _spawnPointTeam2;
+            var spawnPoint  = team == 0 ? _spawnPointTeam1 : _spawnPointTeam2;
+            var character   = CreateView(spawnPoint, clientId);
+        }
 
-            var instance        = Object.Instantiate(_prefab, spawnPoint.Position, spawnPoint.Rotation);
-            var networkObject   = instance.GetComponent<NetworkObject>();
+        [ClientRpc]
+        public void SetupClientRpc()
+        {
+            var clientId    = NetworkManager.Singleton.LocalClientId;
+            var client      = NetworkManager.Singleton.ConnectedClients[clientId];
+            var character   = client.PlayerObject.gameObject;
+
+            SetupCamera(character);
+            SetupHUD(character);
+        }
+
+        private GameObject CreateView(SpawnPoint spawnPoint, ulong clientId)
+        {
+            var instance = Instantiate(_prefab, spawnPoint.Position, spawnPoint.Rotation);
+            var networkObject = instance.GetComponent<NetworkObject>();
+
+            instance.name = instance.name.Replace("(Clone)", clientId.ToString());
 
             networkObject.SpawnAsPlayerObject(clientId);
 
-            _playerUI.Bind(instance);
+            return instance;
+        }
+
+        private void SetupCamera(GameObject characer)
+        {
+            var cameraRoot      = characer.transform.Find("PlayerCameraRoot");
+            var folowedCamera   = FindFirstObjectByType<FollowedCamera>();
+
+            folowedCamera.SetTarget(cameraRoot);
+        }
+
+        private void SetupHUD(GameObject character)
+        {
+            var health = character.GetComponent<HealthComponent>();
+            var weapon = character.GetComponentInChildren<Weapon>();
+
+            _playerHUD.Bind(health, weapon);
         }
     }
 }
