@@ -35,8 +35,7 @@ namespace Assets.Game.Scripts.View
             enabled = IsOwner;
         }
 
-        [ServerRpc]
-        public void SetMovementSpeedServerRpc(float speed)
+        public void SetMovementSpeed(float speed)
         {
             _animator.SetFloat(_animIDMotionSpeed, speed == 0 ? 0 : 1);
 

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.Shooting.Weapon
   ShowTopMostFoldoutHeaderGroup: 1
   _bulletPrefab: {fileID: -3873060741568801059, guid: e48c0fd91c1805049bb3dacece62ce6f, type: 3}
-  _shootForce: 500
+  _shootForce: 50
   _rpm: 500
   _reloadTime: 1
   _shootPoint: {fileID: 4313834715489671431}

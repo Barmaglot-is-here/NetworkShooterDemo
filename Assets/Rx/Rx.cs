@@ -2,17 +2,17 @@
 
 namespace Assets.Rx
 {
-    public class Rx<T>
+    public class Rx<T> : IReadOnlyRx<T>
     {
         private T _value;
-        public T Value 
+        public T Value
         {
             get => _value;
             set
             {
                 _value = value;
 
-                Changed.Invoke(value);
+                Changed?.Invoke(value);
             }
         }
 

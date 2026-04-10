@@ -1,5 +1,4 @@
 ﻿using Assets.Game.Scripts.Gameplay;
-using Assets.Game.Scripts.Gameplay.Camera;
 using Assets.Game.Scripts.Gameplay.Shooting;
 using Assets.Game.Scripts.UI;
 using Unity.Netcode;
@@ -30,8 +29,7 @@ namespace Assets.Game.Scripts.Server.Spawn
         [ClientRpc]
         public void SetupClientRpc()
         {
-            var clientId    = NetworkManager.Singleton.LocalClientId;
-            var client      = NetworkManager.Singleton.ConnectedClients[clientId];
+            var client      = NetworkManager.Singleton.LocalClient;
             var character   = client.PlayerObject.gameObject;
 
             SetupCamera(character);
@@ -40,8 +38,8 @@ namespace Assets.Game.Scripts.Server.Spawn
 
         private GameObject CreateView(SpawnPoint spawnPoint, ulong clientId)
         {
-            var instance = Instantiate(_prefab, spawnPoint.Position, spawnPoint.Rotation);
-            var networkObject = instance.GetComponent<NetworkObject>();
+            var instance        = Instantiate(_prefab, spawnPoint.Position, spawnPoint.Rotation);
+            var networkObject   = instance.GetComponent<NetworkObject>();
 
             instance.name = instance.name.Replace("(Clone)", clientId.ToString());
 

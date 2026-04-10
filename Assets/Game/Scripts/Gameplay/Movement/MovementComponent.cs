@@ -29,7 +29,12 @@ public class MovementComponent : NetworkBehaviour
         _groundCheckComponent   = GetComponent<GroundCheckComponent>();
         _animationController    = GetComponent<CharacterAnimationController>();
 
-        _groundCheckComponent.OnStateChanged += OnGroundStateChanged;
+        _groundCheckComponent.OnStateChanged += OnGroundStateChanged;   
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        enabled = IsOwner;
     }
 
     private void OnGroundStateChanged(bool isGrounded) 
@@ -37,9 +42,6 @@ public class MovementComponent : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsOwner)
-            return;
-
         MoveServerRpc(_direction);
         ApplyGravityServerRpc();
     }
@@ -47,10 +49,6 @@ public class MovementComponent : NetworkBehaviour
     public void SetDirection(Vector2 direction)
     {
         _direction = new(direction.x, 0, direction.y);
-
-        var speed = direction == Vector2.zero ? 0 : _movementSpeed;
-
-        _animationController.SetMovementSpeedServerRpc(speed);
     }
 
     [ServerRpc]
@@ -87,5 +85,7 @@ public class MovementComponent : NetworkBehaviour
     private void MoveServerRpc(Vector3 direction)
     {
         _characterController.Move(transform.rotation * direction * _movementSpeed);
+
+        _animationController.SetMovementSpeed(_characterController.velocity.magnitude);
     }
 }

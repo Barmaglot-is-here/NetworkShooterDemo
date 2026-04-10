@@ -2,4 +2,5 @@
   <Project Path="Game.csproj" />
   <Project Path="Rx.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="QuickOutline.csproj" />
 </Solution>

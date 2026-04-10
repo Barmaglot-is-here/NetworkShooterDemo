@@ -32,6 +32,9 @@ namespace Assets.Game.Scripts.UI
 
         private void OnDestroy()
         {
+            if (_weaponClip == null && _ammoPouch == null)
+                return;
+
             _weaponClip.AmmoCount.Changed -= OnAmmoCountChanged;
             _ammoPouch.AmmoCount.Changed -= OnAmmoCountChanged;
         }

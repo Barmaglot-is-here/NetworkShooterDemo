@@ -23,7 +23,9 @@ namespace Assets.Game.Scripts.Gameplay.Damage
             _damageTarget.OnDamageTaken -= OnDamageTaken;
         }
 
-        private void OnDamageTaken(int value) 
-            => _healthComponent.Value.Value -= value;
+        private void OnDamageTaken(int value)
+        {
+            _healthComponent.ApplyDamageRpc(value);
+        }
     }
 }

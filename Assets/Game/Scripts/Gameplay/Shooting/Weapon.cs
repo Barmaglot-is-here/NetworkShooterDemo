@@ -93,7 +93,7 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
             {
                 SpawnBulletServerRpc();
 
-                Clip.AmmoCount.Value--;
+                Clip.Load(-1);
 
                 yield return _shootDelay;
             } while (!Clip.IsEmpty && ShootingMode.Value == SM.Multiple && !_cancelShooting);
@@ -107,9 +107,9 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
 
             int difference = Clip.AmmoCountMax - Clip.AmmoCount.Value;
 
-            Pouch.AmmoCount.Value -= difference;
+            int ammo = Pouch.GetAmmo(difference);
 
-            Clip.AmmoCount.Value = 30;
+            Clip.Load(ammo);
 
             _realodCoroutine = null;
         }

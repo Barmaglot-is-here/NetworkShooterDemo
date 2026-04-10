@@ -42,7 +42,8 @@ namespace Assets.Game.Scripts.UI
 
         private void OnDestroy()
         {
-            _shootingMode.Changed -= OnShootingModeChanged;
+            if (_shootingMode != null)
+                _shootingMode.Changed -= OnShootingModeChanged;
         }
     }
 }

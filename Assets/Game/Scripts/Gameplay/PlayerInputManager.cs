@@ -1,4 +1,5 @@
-﻿using Assets.Game.Scripts.Gameplay.Shooting;
+﻿using Assets.Game.Scripts.Gameplay.Interaction;
+using Assets.Game.Scripts.Gameplay.Shooting;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,8 @@ namespace Assets.Scripts.Gameplay
         private RotationComponent _rotationComponent;
         [SerializeField]
         private Weapon _weapon;
+        [SerializeField]
+        private Interactor _interactor;
 
         private InputActions _inputActions;
 
@@ -40,7 +43,9 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Shoot.canceled += OnShootCanceled;
             PlayerActions.Reload.performed += OnReloadPerformed;
             PlayerActions.SwitchShootingMode.performed += OnSwitchShootingModePerformed;
+            PlayerActions.Interact.performed += OnInteractPerformed;
         }
+
 
         public override void OnNetworkDespawn()
         {
@@ -56,6 +61,7 @@ namespace Assets.Scripts.Gameplay
             PlayerActions.Shoot.performed -= OnShootPerformed;
             PlayerActions.Reload.performed -= OnReloadPerformed;
             PlayerActions.SwitchShootingMode.performed -= OnSwitchShootingModePerformed;
+            PlayerActions.Interact.performed -= OnInteractPerformed;
         }
         private void OnMovePerformed(InputAction.CallbackContext context) 
             => _movementComponent.SetDirection(context.ReadValue<Vector2>());
@@ -79,5 +85,8 @@ namespace Assets.Scripts.Gameplay
 
         private void OnSwitchShootingModePerformed(InputAction.CallbackContext context) 
             => _weapon.SwitchShootingMode();
+
+        private void OnInteractPerformed(InputAction.CallbackContext context)
+            => _interactor.Interact();
     }
 }

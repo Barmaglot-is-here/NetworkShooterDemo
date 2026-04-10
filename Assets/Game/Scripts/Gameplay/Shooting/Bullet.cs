@@ -16,7 +16,7 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
         public void AddForce(Vector3 force) 
             => _rigidbody.AddRelativeForce(force, ForceMode.Impulse);
 
-        private void OnTriggerEnter(Collider other)
+        private void OnCollisionEnter(Collision collision)
             => Destroy(gameObject);
     }
 }
