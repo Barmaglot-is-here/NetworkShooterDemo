@@ -1,4 +1,5 @@
 ﻿using Assets.Game.Scripts.Server.Spawn;
+using Assets.Game.Scripts.Services.StatisticsCount;
 using System;
 using Unity.Netcode;
 
@@ -31,12 +32,21 @@ namespace Assets.Game.Scripts.Server
             _maxPlayersCount    = maxPlayersCount;
 
             NetworkManager.Singleton.OnClientConnectedCallback += OnConnectionEventPerformed;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnConnectionEventPerformed;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnDisconnectionEventPerformed;
         }
 
-        private void OnConnectionEventPerformed(ulong obj)
+        private void OnConnectionEventPerformed(ulong id)
         {
             OnClientCountChanged.Invoke(PlayersCount);
+
+            StatisticsManager.Instance.AddPlayer(id);
+        }
+
+        private void OnDisconnectionEventPerformed(ulong id)
+        {
+            OnClientCountChanged.Invoke(PlayersCount);
+
+            StatisticsManager.Instance.RemovePlayer(id);
         }
 
         public void Host() => NetworkManager.Singleton.StartHost();

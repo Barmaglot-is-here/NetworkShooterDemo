@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Interaction
 {
-    public class Interactor : MonoBehaviour
+    public class Interactor : NetworkBehaviour
     {
         [SerializeField]
         private float _radius = 2f;
@@ -12,6 +13,8 @@ namespace Assets.Game.Scripts.Gameplay.Interaction
         private LayerMask _interactionMask;
 
         private InteractionTarget _currentTarget;
+
+        public override void OnNetworkSpawn() => enabled = IsOwner;
 
         private void Update()
         {
@@ -53,11 +56,11 @@ namespace Assets.Game.Scripts.Gameplay.Interaction
 
         private void UpdateTarget(InteractionTarget newTarget)
         {
-            _currentTarget?.SetFocusRpc(false);
+            _currentTarget?.SetFocus(false);
 
             _currentTarget = newTarget;
 
-            _currentTarget?.SetFocusRpc(true);
+            _currentTarget?.SetFocus(true);
         }
 
         public void Interact() => _currentTarget?.Interact();

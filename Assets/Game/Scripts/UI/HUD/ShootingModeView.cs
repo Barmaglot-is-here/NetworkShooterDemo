@@ -3,7 +3,7 @@ using Assets.Rx;
 using TMPro;
 using UnityEngine;
 
-namespace Assets.Game.Scripts.UI
+namespace Assets.Game.Scripts.UI.HUD
 {
     public class ShootingModeView : MonoBehaviour
     {

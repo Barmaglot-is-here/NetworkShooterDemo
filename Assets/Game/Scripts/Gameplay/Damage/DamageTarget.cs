@@ -1,5 +1,4 @@
-﻿using System;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Damage
@@ -8,7 +7,9 @@ namespace Assets.Game.Scripts.Gameplay.Damage
     {
         private const string DAMAGE_OBJECT_TAG = "DamageObject";
 
-        public event Action<int> OnDamageTaken;
+        public delegate void DamageDelegate(ulong senderId, int damage);
+
+        public event DamageDelegate OnDamageTaken;
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -17,7 +18,7 @@ namespace Assets.Game.Scripts.Gameplay.Damage
 
             var damageObject = collision.gameObject.GetComponent<DamageObject>();
 
-            OnDamageTaken?.Invoke(damageObject.Damage);
+            OnDamageTaken?.Invoke(damageObject.OwnerClientId, damageObject.Damage);
         }
     }
 }

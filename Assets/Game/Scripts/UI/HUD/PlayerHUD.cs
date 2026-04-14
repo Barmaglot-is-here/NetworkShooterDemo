@@ -2,7 +2,7 @@
 using Assets.Game.Scripts.Gameplay.Shooting;
 using UnityEngine;
 
-namespace Assets.Game.Scripts.UI
+namespace Assets.Game.Scripts.UI.HUD
 {
     public class PlayerHUD : MonoBehaviour
     {

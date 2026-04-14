@@ -1,25 +1,27 @@
-﻿using Unity.Netcode;
+﻿using Assets.Game.Scripts.UI;
 using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Interaction
 {
     [RequireComponent(typeof(Outline))]
-    [RequireComponent(typeof(NetworkObject))]
-    public abstract class InteractionTarget : NetworkBehaviour
+    public abstract class InteractionTarget : MonoBehaviour
     {
         private Outline _outline;
+        private InteractionHint _interactionHint;
 
         private void Awake()
         {
-            _outline = GetComponent<Outline>();
+            _outline            = GetComponent<Outline>();
+            _interactionHint    = GetComponentInChildren<InteractionHint>(true);
 
             _outline.enabled = false;
         }
 
-        [Rpc(SendTo.Owner)]
-        public void SetFocusRpc(bool state)
+        public void SetFocus(bool state)
         {
             _outline.enabled = state;
+
+            _interactionHint.SetActive(state);
         }
 
         public abstract void Interact();

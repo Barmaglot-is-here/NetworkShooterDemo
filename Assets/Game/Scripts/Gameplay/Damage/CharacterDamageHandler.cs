@@ -23,9 +23,7 @@ namespace Assets.Game.Scripts.Gameplay.Damage
             _damageTarget.OnDamageTaken -= OnDamageTaken;
         }
 
-        private void OnDamageTaken(int value)
-        {
-            _healthComponent.ApplyDamageRpc(value);
-        }
+        private void OnDamageTaken(ulong senderId, int damage) 
+            => _healthComponent.ApplyDamageRpc(damage);
     }
 }

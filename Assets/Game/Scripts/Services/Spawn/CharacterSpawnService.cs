@@ -1,6 +1,6 @@
 ﻿using Assets.Game.Scripts.Gameplay;
 using Assets.Game.Scripts.Gameplay.Shooting;
-using Assets.Game.Scripts.UI;
+using Assets.Game.Scripts.UI.HUD;
 using Unity.Netcode;
 using UnityEngine;
 
