@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Game.Scripts.View
+namespace Assets.Game.Scripts.Presentation
 {
     public class CharacterSoundController : MonoBehaviour
     {

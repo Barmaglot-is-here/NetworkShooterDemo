@@ -1,24 +1,26 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.Damage
 {
     [RequireComponent(typeof(HealthComponent))]
     [RequireComponent(typeof(DamageTarget))]
-    public class CharacterDamageHandler : NetworkBehaviour
+    public class CharacterDamageHandler : MonoBehaviour
     {
         private DamageTarget _damageTarget;
         private HealthComponent _healthComponent;
 
-        public override void OnNetworkSpawn()
+        private void Awake()
         {
             _damageTarget       = GetComponent<DamageTarget>();
             _healthComponent    = GetComponent<HealthComponent>();
+        }
 
+        private void OnEnable()
+        {
             _damageTarget.OnDamageTaken += OnDamageTaken;
         }
 
-        public override void OnNetworkDespawn()
+        private void OnDisable()
         {
             _damageTarget.OnDamageTaken -= OnDamageTaken;
         }

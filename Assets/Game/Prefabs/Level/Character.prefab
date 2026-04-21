@@ -1304,6 +1304,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8928471773505522339}
+    - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7014945920162674738}
     - targetCorrespondingSourceObject: {fileID: 8338988566280778634, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3045137773558101840}
@@ -1529,7 +1532,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9a970d9911dc0946b32a8063887f363, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.Damage.CharacterDamageHandler
-  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!114 &-3631960304485891931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1644,6 +1646,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70a18b7cfaf35e4f8be74b64803ee39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Assets.Game.Scripts.Gameplay.StatisticsCount.DeathHandler
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &7014945920162674738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093712584606241181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fae9fe33fd83b294aaadcbfaa46b381b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Assets.Game.Scripts.Gameplay.DeathHandle.DeathHandler
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!4 &4745596608364783809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8338988566280778637, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}

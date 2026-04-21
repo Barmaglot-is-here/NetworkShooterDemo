@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-namespace Assets.Game.Scripts.View
+namespace Assets.Game.Scripts.Presentation
 {
     [RequireComponent(typeof(Animator))]
     public class CharacterAnimationController : NetworkBehaviour

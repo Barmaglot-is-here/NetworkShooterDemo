@@ -3,9 +3,8 @@ using Unity.Netcode;
 
 namespace Assets.Game.Scripts.Services.StatisticsCount
 {
-    public struct PlayerStatistic : INetworkSerializable, IEquatable<PlayerStatistic>
+    public struct PlayerStats : INetworkSerializable, IEquatable<PlayerStats>
     {
-        public ulong OwnerId;
         public int KillCount;
         public int DeathCount;
         public int AppliedDamage;
@@ -19,10 +18,9 @@ namespace Assets.Game.Scripts.Services.StatisticsCount
             serializer.SerializeValue(ref RecivedDamage);
         }
 
-        bool IEquatable<PlayerStatistic>.Equals(PlayerStatistic other)
+        bool IEquatable<PlayerStats>.Equals(PlayerStats other)
         {
-            return OwnerId == other.OwnerId &&
-                   KillCount == other.KillCount && DeathCount == other.DeathCount && 
+            return KillCount == other.KillCount && DeathCount == other.DeathCount && 
                    AppliedDamage == other.AppliedDamage && RecivedDamage == other.RecivedDamage;
         }
     }

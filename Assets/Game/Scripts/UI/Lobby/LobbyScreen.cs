@@ -1,6 +1,5 @@
 ﻿using Assets.Game.Scripts.Server;
-using Assets.Game.Scripts.UI.Controls;
-using TMPro;
+using Assets.Game.Scripts.Services.TeamManagement;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +9,6 @@ namespace Assets.Scripts.UI
     public class LobbyScreen : NetworkBehaviour
     {
         [SerializeField]
-        private TMP_Text _playersCount;
-        
-        [SerializeField]
         private Button _hostButton;
         [SerializeField]
         private Button _connectButton;
@@ -20,25 +16,21 @@ namespace Assets.Scripts.UI
         private Button _runButton;
 
         [SerializeField]
+        private LobbyPlayersTab _lobbyPlayersTab;
+        [SerializeField]
         private GameObject _loadingIndicator;
 
-        private ServerManager _connectionService;
+        private ServerManager _serverManager;
 
         private void Start()
         {
             _runButton.gameObject.SetActive(false);
-            ShowPlayerCount(false);
         }
 
-        public void Bind(ServerManager connectionService)
+        public void Bind(ServerManager serverManager)
         {
-            _connectionService = connectionService;
-
-            _connectionService.OnClientCountChanged += OnClientCountChanged;
+            _serverManager = serverManager;
         }
-
-        private void OnClientCountChanged(int count)
-            => _playersCount.SetText($"Players count: {count}");
 
         private void OnEnable()
         {
@@ -56,13 +48,11 @@ namespace Assets.Scripts.UI
 
         private void OnHostButtonClick()
         {
-            _connectionService.Host();
+            _serverManager.Host();
 
             HideHostButtons();
 
             _runButton.gameObject.SetActive(true);
-
-            ShowPlayerCount(true);
         }
 
         private void HideHostButtons()
@@ -73,22 +63,16 @@ namespace Assets.Scripts.UI
 
         private void OnConnectButtonClick()
         {
-            _connectionService.TryConnect();
+            _serverManager.TryConnect();
 
             HideHostButtons();
 
             _loadingIndicator.SetActive(true);
-            ShowPlayerCount(true);
-        }
-
-        private void ShowPlayerCount(bool state)
-        {
-            _playersCount.transform.parent.gameObject.SetActive(state);
         }
 
         private void OnRunButtonClick()
         {
-            _connectionService.Run();
+            _serverManager.Run();
             HideClientRpc();
         }
 

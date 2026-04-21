@@ -10,10 +10,10 @@ namespace Assets.Game.Scripts.Services.StatisticsCount
     {
         public static StatisticsManager Instance { get; private set; }
 
-        public Dictionary<ulong, PlayerStatistic> Stats { get; private set; }
+        public Dictionary<ulong, PlayerStats> Stats { get; private set; }
 
-        public event Action<ulong, PlayerStatistic> OnChanged;
-        public event Action<ulong, PlayerStatistic> OnStatAdd;
+        public event Action<ulong, PlayerStats> OnChanged;
+        public event Action<ulong, PlayerStats> OnStatAdd;
         public event Action<ulong> OnStatRemove;
 
         private void Awake()
@@ -24,23 +24,11 @@ namespace Assets.Game.Scripts.Services.StatisticsCount
 
         public void AddPlayer(ulong id)
         {
-            if (IsServer)
-                SyncStats(id);
-
-            PlayerStatistic stat = new();
+            PlayerStats stat = new();
 
             Stats.Add(id, stat);
 
             OnStatAdd?.Invoke(id, stat);
-        }
-
-        private void SyncStats(ulong clientId)
-        {
-            ClientRpcParams rpcParams = new();
-            rpcParams.Send.TargetClientIds = new List<ulong> { clientId };
-
-            foreach (var stat in Stats)
-                UpdateStatsClientRpc(stat.Key, stat.Value, rpcParams);
         }
 
         public void RemovePlayer(ulong id)
@@ -75,15 +63,7 @@ namespace Assets.Game.Scripts.Services.StatisticsCount
         }
 
         [Rpc(SendTo.Everyone)]
-        private void UpdateStatsRpc(ulong playerId, PlayerStatistic stats)
-        {
-            Stats[playerId] = stats;
-
-            OnChanged?.Invoke(playerId, stats);
-        }
-
-        [ClientRpc]
-        private void UpdateStatsClientRpc(ulong playerId, PlayerStatistic stats, ClientRpcParams rpcParams)
+        private void UpdateStatsRpc(ulong playerId, PlayerStats stats)
         {
             Stats[playerId] = stats;
 

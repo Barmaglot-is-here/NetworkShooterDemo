@@ -64,5 +64,7 @@ namespace Assets.Game.Scripts.Gameplay.Interaction
         }
 
         public void Interact() => _currentTarget?.Interact();
+
+        public override void OnNetworkDespawn() => UpdateTarget(null);
     }
 }

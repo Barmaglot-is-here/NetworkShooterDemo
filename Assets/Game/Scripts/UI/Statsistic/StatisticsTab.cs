@@ -1,4 +1,6 @@
-﻿using Assets.Game.Scripts.Services.StatisticsCount;
+﻿using Assets.Game.Scripts.Server;
+using Assets.Game.Scripts.Services;
+using Assets.Game.Scripts.Services.StatisticsCount;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,18 +9,18 @@ namespace Assets.Game.Scripts.UI.Statsistic
     public class StatisticsTab : MonoBehaviour
     {
         [SerializeField]
-        private PlayerStatisticView _prefab;
+        private StatsView _prefab;
 
         [SerializeField]
         private Transform _teamOneColoumn;
         [SerializeField]
         private Transform _teamTwoColoumn;
 
-        private Dictionary<ulong, PlayerStatisticView> _playerStatisticViews;
+        private Dictionary<ulong, StatsView> _statsViews;
 
         private void Awake()
         {
-            _playerStatisticViews = new();
+            _statsViews = new();
         }
 
         private void OnEnable()
@@ -40,45 +42,53 @@ namespace Assets.Game.Scripts.UI.Statsistic
             }
         }
 
-        private PlayerStatisticView GetView(ulong ownerId)
+        private StatsView GetView(ulong playerId)
         {
-            PlayerStatisticView view;
+            StatsView view;
 
-            if (!_playerStatisticViews.ContainsKey(ownerId))
+            if (!_statsViews.ContainsKey(playerId))
             {
-                view = Instantiate(_prefab, _teamOneColoumn);
-
-                _playerStatisticViews.Add(ownerId, view);
+                int team    = ServerManager.PlayerList.GetTeam(playerId);
+                view        = CreateView(playerId, team);
             }
             else
-                view = _playerStatisticViews[ownerId];
+                view = _statsViews[playerId];
 
             return view;
         }
 
-        private void OnStatAdd(ulong player, PlayerStatistic stat)
+        private StatsView CreateView(ulong playerId, int team)
         {
-            var view = Instantiate(_prefab, _teamOneColoumn);
+            var coloumn = team == 0 ? _teamOneColoumn : _teamTwoColoumn;
+            var view    = Instantiate(_prefab, coloumn);
 
-            view.Show(player, stat);
+            _statsViews.Add(playerId, view);
 
-            _playerStatisticViews.Add(player, view);
+            return view;
         }
 
-        private void OnStatRemove(ulong player)
+        private void OnStatAdd(ulong playerId, PlayerStats stat)
         {
-            var view = Instantiate(_prefab, _teamOneColoumn);
+            int team = ServerManager.PlayerList.GetTeam(playerId);
+            var view = CreateView(playerId, team);
+
+            view.Show(playerId, stat);
+        }
+
+        private void OnStatRemove(ulong playerId)
+        {
+            var view = _statsViews[playerId];
 
             Destroy(view.gameObject);
 
-            _playerStatisticViews.Remove(player);
+            _statsViews.Remove(playerId);
         }
 
-        private void OnStatChanged(ulong player, PlayerStatistic statistic)
+        private void OnStatChanged(ulong playerId, PlayerStats statistic)
         {
-            var view = _playerStatisticViews[player];
+            var view = _statsViews[playerId];
 
-            view.Show(player, statistic);
+            view.Show(playerId, statistic);
         }
 
         private void OnDisable()

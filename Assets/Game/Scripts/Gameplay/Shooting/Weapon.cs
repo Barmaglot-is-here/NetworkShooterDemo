@@ -39,9 +39,6 @@ namespace Assets.Game.Scripts.Gameplay.Shooting
             _shootDelay     = new(60 / _rpm);
 
             ShootingMode = new(SM.Multiple);
-
-            //Temp
-            Connect(new(120, 120));
         }
 
         public void Connect(AmmoPouch ammoPouch)

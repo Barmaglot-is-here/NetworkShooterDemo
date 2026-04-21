@@ -20,13 +20,6 @@ namespace Assets.Game.Scripts.Gameplay.StatisticsCount
 
         public override void OnNetworkSpawn()
         {
-            if (!IsOwner)
-            {
-                enabled = false;
-
-                return;
-            }
-
             _damageTarget.OnDamageTaken += OnDamageTaken;
         }
 
