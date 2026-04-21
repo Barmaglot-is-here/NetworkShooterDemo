@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Assets.Game.Scripts.Services.ProfileManagement;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Game.Scripts.UI.Lobby
@@ -10,7 +11,7 @@ namespace Assets.Game.Scripts.UI.Lobby
 
         public void Show(ulong playerId)
         {
-            _name.text = playerId.ToString();
+            _name.text = ProfileManager.GetName(playerId);
         }
     }
 }

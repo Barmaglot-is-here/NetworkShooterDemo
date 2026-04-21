@@ -1,4 +1,5 @@
-﻿using Assets.Game.Scripts.Services.StatisticsCount;
+﻿using Assets.Game.Scripts.Services.ProfileManagement;
+using Assets.Game.Scripts.Services.StatisticsCount;
 using TMPro;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Assets.Game.Scripts.UI.Statsistic
 
         public void Show(ulong playerId, PlayerStats statistic)
         {
-            _playerName.text    = playerId.ToString();
+            _playerName.text    = ProfileManager.GetName(playerId);
             _kills.text         = statistic.KillCount.ToString();
             _deaths.text        = statistic.DeathCount.ToString();
         }

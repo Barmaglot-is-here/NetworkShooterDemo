@@ -11,7 +11,6 @@ namespace Assets.Game.Scripts.Server
     {
         private readonly SynchronizationService _synchronizationService;
         private readonly CharacterSpawnService _spawnService;
-        private readonly TeamManager _teamManager;
 
         private int _maxPlayersCount;
 
@@ -37,12 +36,10 @@ namespace Assets.Game.Scripts.Server
 
         public ServerManager(SynchronizationService synchronizationService, 
                              CharacterSpawnService spawnService,
-                             TeamManager teamManager,
                              int maxPlayersCount)
         {
             _synchronizationService = synchronizationService;
             _spawnService           = spawnService;
-            _teamManager            = teamManager;
             _maxPlayersCount        = maxPlayersCount;
 
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
@@ -59,12 +56,15 @@ namespace Assets.Game.Scripts.Server
 
         private void OnClientConnected(ulong id)
         {
-            _teamManager.DistributePlayer(PlayerList, id);
+            if (!NetworkManager.Singleton.IsServer)
+                return;
+
+            TeamDistributor.Distribute(PlayerList, id);
             _synchronizationService.SyncPlayerList(id);
         }
 
         private void OnClientDisconnected(ulong id) 
-            => _teamManager.RemoveAndDistribute(PlayerList, id);
+            => TeamDistributor.RemoveAndDistribute(PlayerList, id);
 
         public void Host() => NetworkManager.Singleton.StartHost();
         public bool TryConnect()

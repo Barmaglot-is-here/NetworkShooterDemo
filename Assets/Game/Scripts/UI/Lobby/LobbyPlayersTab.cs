@@ -23,7 +23,6 @@ namespace Assets.Scripts.UI
         {
             _teamOneViews = new();
             _teamTwoViews = new();
-
         }
 
         private void OnPlayerAdd(ulong playerId, int team)

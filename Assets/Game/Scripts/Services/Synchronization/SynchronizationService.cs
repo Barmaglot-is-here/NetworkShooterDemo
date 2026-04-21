@@ -8,7 +8,7 @@ namespace Assets.Game.Scripts.Services
     {
         public void SyncPlayerList(ulong clientId)
         {
-            if (!IsServer || clientId == OwnerClientId)
+            if (clientId == OwnerClientId)
                 return;
 
             ClientRpcParams rpcParams = new();

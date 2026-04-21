@@ -14,13 +14,11 @@ namespace Assets.Game.Scripts
         [SerializeField]
         private CharacterSpawnService _spawnService;
         [SerializeField]
-        private TeamManager _teamManager;
-        [SerializeField]
         private LobbyScreen _lobbyScreen;
 
         private void Start()
         {
-            ServerManager serverManager = new(_synchronizationService, _spawnService, _teamManager, 6);
+            ServerManager serverManager = new(_synchronizationService, _spawnService, 6);
 
             _lobbyScreen.Bind(serverManager);
         }
