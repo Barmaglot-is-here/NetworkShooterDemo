@@ -13,9 +13,9 @@ namespace Assets.Scripts.Gameplay
         [SerializeField]
         private RotationComponent _rotationComponent;
         [SerializeField]
-        private Weapon _weapon;
-        [SerializeField]
         private Interactor _interactor;
+
+        private Weapon _weapon;
 
         private InputActions _inputActions;
 
@@ -24,6 +24,11 @@ namespace Assets.Scripts.Gameplay
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        public void Setup(Weapon weapon)
+        {
+            _weapon = weapon;
         }
 
         public override void OnNetworkSpawn()

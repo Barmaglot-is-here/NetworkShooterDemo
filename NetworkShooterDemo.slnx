@@ -1,6 +1,8 @@
 ﻿<Solution>
   <Project Path="Game.csproj" />
+  <Project Path="UIManagement.csproj" />
   <Project Path="Rx.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="QuickOutline.csproj" />
+  <Project Path="Signals.csproj" />
 </Solution>

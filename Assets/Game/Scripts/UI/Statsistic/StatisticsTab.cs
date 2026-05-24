@@ -1,5 +1,4 @@
-﻿using Assets.Game.Scripts.Server;
-using Assets.Game.Scripts.Services;
+﻿using Assets.Game.Scripts.Services;
 using Assets.Game.Scripts.Services.StatisticsCount;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,92 +8,99 @@ namespace Assets.Game.Scripts.UI.Statsistic
     public class StatisticsTab : MonoBehaviour
     {
         [SerializeField]
-        private StatsView _prefab;
+        private StatisticsTabRow _prefab;
 
         [SerializeField]
         private Transform _teamOneColoumn;
         [SerializeField]
         private Transform _teamTwoColoumn;
 
-        private Dictionary<ulong, StatsView> _statsViews;
+        private Dictionary<ulong, StatisticsTabRow> _rows;
+
+        private PlayerList _playerList;
+
+        public void Bind(PlayerList playerList)
+        {
+            _playerList = playerList;
+        }
 
         private void Awake()
         {
-            _statsViews = new();
+            _rows = new();
         }
 
         private void OnEnable()
         {
-            FillView(StatisticsManager.Instance);
+            FillView(StatisticsService.Instance);
 
-            StatisticsManager.Instance.OnStatAdd += OnStatAdd;
-            StatisticsManager.Instance.OnStatRemove += OnStatRemove;
-            StatisticsManager.Instance.OnChanged += OnStatChanged;
+            StatisticsService.Instance.OnAdd += OnStatAdd;
+            StatisticsService.Instance.OnRemove += OnStatRemove;
+            StatisticsService.Instance.OnChanged += OnStatChanged;
         }
 
-        private void FillView(StatisticsManager statisticsManager)
+        private void FillView(StatisticsService statisticsManager)
         {
             foreach (var stat in statisticsManager.Stats)
             {
                 var view = GetView(stat.Key);
 
-                view.Show(stat.Key, stat.Value);
+                //view.Show(stat.Key, stat.Value);
             }
         }
 
-        private StatsView GetView(ulong playerId)
+        private StatisticsTabRow GetView(ulong playerId)
         {
-            StatsView view;
+            StatisticsTabRow view;
 
-            if (!_statsViews.ContainsKey(playerId))
+            if (!_rows.ContainsKey(playerId))
             {
-                int team    = ServerManager.PlayerList.GetTeam(playerId);
+                int team    = _playerList.GetTeam(playerId);
                 view        = CreateView(playerId, team);
             }
             else
-                view = _statsViews[playerId];
+                view = _rows[playerId];
 
             return view;
         }
 
-        private StatsView CreateView(ulong playerId, int team)
+        private StatisticsTabRow CreateView(ulong playerId, int team)
         {
             var coloumn = team == 0 ? _teamOneColoumn : _teamTwoColoumn;
             var view    = Instantiate(_prefab, coloumn);
 
-            _statsViews.Add(playerId, view);
+            _rows.Add(playerId, view);
 
             return view;
         }
 
-        private void OnStatAdd(ulong playerId, PlayerStats stat)
+        private void OnStatAdd(ulong playerId, PlayerStatistics stat)
         {
-            int team = ServerManager.PlayerList.GetTeam(playerId);
+            int team = _playerList.GetTeam(playerId);
             var view = CreateView(playerId, team);
 
-            view.Show(playerId, stat);
+            //view.Show(playerId, stat);
         }
 
         private void OnStatRemove(ulong playerId)
         {
-            var view = _statsViews[playerId];
+            var view = _rows[playerId];
 
             Destroy(view.gameObject);
 
-            _statsViews.Remove(playerId);
+            _rows.Remove(playerId);
         }
 
-        private void OnStatChanged(ulong playerId, PlayerStats statistic)
+        private void OnStatChanged(ulong playerId, PlayerStatistics statistic)
         {
-            var view = _statsViews[playerId];
+            var view = _rows[playerId];
 
-            view.Show(playerId, statistic);
+            //view.Show(playerId, statistic);
         }
 
         private void OnDisable()
         {
-            StatisticsManager.Instance.OnStatAdd -= OnStatAdd;
-            StatisticsManager.Instance.OnStatRemove -= OnStatRemove;
+            StatisticsService.Instance.OnAdd -= OnStatAdd;
+            StatisticsService.Instance.OnRemove -= OnStatRemove;
         }
 
         public void Show() => gameObject.SetActive(true);

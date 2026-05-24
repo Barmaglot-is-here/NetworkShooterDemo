@@ -30,10 +30,10 @@ namespace Assets.Game.Scripts.Gameplay.StatisticsCount
 
         private void OnDamageTaken(ulong senderId, int damage)
         {
-            StatisticsManager.Instance.CountDamage(OwnerClientId, senderId, damage);
+            StatisticsService.Instance.CountDamage(OwnerClientId, senderId, damage);
 
             if (_healthComponent.Value <= 0)
-                StatisticsManager.Instance.CountKill(OwnerClientId, senderId);
+                StatisticsService.Instance.CountKill(OwnerClientId, senderId);
         }
     }
 }

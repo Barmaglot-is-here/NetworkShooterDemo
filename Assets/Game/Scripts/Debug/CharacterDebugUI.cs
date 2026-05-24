@@ -10,8 +10,6 @@ public class CharacterDebugUI : NetworkBehaviour
     [SerializeField]
     private HealthComponent _healthComponent;
 
-    private Camera _camera;
-
     public override void OnNetworkSpawn()
     {
         //Выключаем UI для владельца, но показываем всем остальным
@@ -25,14 +23,12 @@ public class CharacterDebugUI : NetworkBehaviour
         _healthComponent.OnChanged += OnHealthChanged;
 
         OnHealthChanged(0, _healthComponent.Value);
-
-        _camera = Camera.main;
     }
 
     //Поворачиваем в сторону смотрящего
     private void LateUpdate()
     {
-        transform.rotation = _camera.transform.rotation;
+        transform.rotation = Camera.main.transform.rotation;
     }
 
     private void OnHealthChanged(int previousValue, int newValue) 

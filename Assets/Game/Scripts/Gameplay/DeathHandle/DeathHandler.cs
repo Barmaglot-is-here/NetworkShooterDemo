@@ -1,4 +1,5 @@
 ﻿using Assets.Game.Scripts.Server.Spawn;
+using Assets.Game.Scripts.Services.Spawn;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,13 +11,13 @@ namespace Assets.Game.Scripts.Gameplay.DeathHandle
         private HealthComponent _healthComponent;
         private CharacterSpawnService _spawnService;
 
-        private int _team;
+        private SpawnProfile _spawnProfile;
 
-        public void Setup(CharacterSpawnService spawnService, int team)
+        public void Setup(CharacterSpawnService spawnService, SpawnProfile spawnProfile)
         {
             _healthComponent    = GetComponent<HealthComponent>();
             _spawnService       = spawnService;
-            _team               = team;
+            _spawnProfile       = spawnProfile;
 
             _healthComponent.OnChanged += OnHealthChanged;
         }
@@ -35,7 +36,7 @@ namespace Assets.Game.Scripts.Gameplay.DeathHandle
 
         private void OnDeath()
         {
-            _spawnService.SpawnRpc(OwnerClientId, _team);
+            _spawnService.SpawnRpc(_spawnProfile);
 
             DestroyRpc();
         }
