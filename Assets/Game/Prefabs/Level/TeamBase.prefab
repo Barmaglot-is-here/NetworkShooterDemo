@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 4040591014
+  GlobalObjectIdHash: 3614788459
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1766,7 +1766,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6674574886295300993}
-  - component: {fileID: 8953019875666312802}
   m_Layer: 0
   m_Name: __SpawnPoint__
   m_TagString: Untagged
@@ -1782,26 +1781,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3886296219383107342}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.9063079, z: 0, w: 0.42261827}
   m_LocalPosition: {x: -38.06983, y: 3, z: -17.8597}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7472400653135961543}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8953019875666312802
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3886296219383107342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8490ae8f41d33974b820bd3af8a425a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Infrastructure.SpawnPoint
-  _rotation: {x: 0, y: 130, z: 0}
 --- !u!1 &3945170209543777937
 GameObject:
   m_ObjectHideFlags: 0

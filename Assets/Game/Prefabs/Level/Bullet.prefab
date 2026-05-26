@@ -80,10 +80,10 @@ PrefabInstance:
       addedObject: {fileID: -684353205547587388}
     - targetCorrespondingSourceObject: {fileID: 8489818951931819000, guid: 76d6965a82c700547ac9c860a6e92ca9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -3873060741568801059}
+      addedObject: {fileID: 3803943718724460307}
     - targetCorrespondingSourceObject: {fileID: 8489818951931819000, guid: 76d6965a82c700547ac9c860a6e92ca9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3803943718724460307}
+      addedObject: {fileID: -3873060741568801059}
     - targetCorrespondingSourceObject: {fileID: 8489818951931819000, guid: 76d6965a82c700547ac9c860a6e92ca9, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5665094145059528960}
@@ -151,20 +151,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &-3873060741568801059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663588500455647144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 524273334a9bd604aadbc70d780451db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.Shooting.Bullet
-  ShowTopMostFoldoutHeaderGroup: 1
-  <Damage>k__BackingField: 20
 --- !u!114 &3803943718724460307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,6 +197,20 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-3873060741568801059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3663588500455647144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 524273334a9bd604aadbc70d780451db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.Shooting.Bullet
+  ShowTopMostFoldoutHeaderGroup: 1
+  <Damage>k__BackingField: 20
 --- !u!114 &-5665094145059528960
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,9 +21,9 @@ namespace Assets.Game.Scripts.Server.Spawn
         private GameObject _prefab;
 
         [SerializeField]
-        private SpawnPoint _spawnPointTeam1;
+        private Transform _spawnPointTeam1;
         [SerializeField]
-        private SpawnPoint _spawnPointTeam2;
+        private Transform _spawnPointTeam2;
 
         [SerializeField]
         private PlayerHUD _playerHUD;
@@ -66,46 +66,55 @@ namespace Assets.Game.Scripts.Server.Spawn
             var weapon      = FindObjectsByType<Weapon>(FindObjectsSortMode.None)
                                 .First(w => w.OwnerClientId == profile.PlayerId);
 
-            //Temp
-            weapon.Connect(new(120, 120));
-
             SetupCamera(character);
+            SetupWeapon(character, weapon, new(120, 120));
             SetupInput(character, weapon);
             SetupHUD(character, weapon);
             SetupDeathHandler(character, profile);
         }
 
-        private GameObject CreateView(SpawnPoint spawnPoint, ulong clientId)
+        private GameObject CreateView(Transform spawnPoint, ulong clientId)
         {
-            var instance        = Instantiate(_prefab, spawnPoint.Position, spawnPoint.Rotation);
+            var instance        = Instantiate(_prefab, spawnPoint.position, spawnPoint.rotation);
             var networkObject   = instance.GetComponent<NetworkObject>();
-
+            
             instance.name = instance.name.Replace("(Clone)", clientId.ToString());
 
             networkObject.SpawnAsPlayerObject(clientId);
-
+            
             return instance;
         }
 
         private void CreateWeapon(GameObject character, string prefabName, ulong ownerId)
         {
-            var weaponTargetPoint  = GetWeaponSpawnPoint(character);
             var weapon      = Resources.Load<Weapon>(prefabName);
 
             var instance        = Instantiate(weapon);
-            var followedObject  = instance.GetComponent<FollowedObject>();
             var networkObject   = instance.GetComponent<NetworkObject>();
 
-            followedObject.SetTarget(weaponTargetPoint);
             networkObject.SpawnWithOwnership(ownerId);
+
+            SetupWeapon(character, instance, null);
         }
 
-        private void SetupCamera(GameObject characer)
+        private void SetupCamera(GameObject character)
         {
-            var cameraRoot      = characer.transform.Find(CAMERA_ROOT_NAME);
+            var cameraRoot      = character.transform.Find(CAMERA_ROOT_NAME);
             var folowedCamera   = Camera.main.GetComponent<FollowedObject>();
 
             folowedCamera.SetTarget(cameraRoot);
+        }
+
+        //Отдельно устанавливаем состояние оружия на клиенте и сервере
+        //Чтобы избежать артефактов синхронизации на клиенте
+        private void SetupWeapon(GameObject character, Weapon weapon, AmmoPouch pouch)
+        {
+            weapon.Connect(pouch);
+
+            var weaponTargetPoint   = GetWeaponBindingPoint(character);
+            var followedObject      = weapon.GetComponent<FollowedObject>();
+
+            followedObject.SetTarget(weaponTargetPoint);
         }
 
         private void SetupInput(GameObject character, Weapon weapon)
@@ -129,7 +138,7 @@ namespace Assets.Game.Scripts.Server.Spawn
             handler.Setup(this, spawnProfile);
         }
 
-        private Transform GetWeaponSpawnPoint(GameObject character)
+        private Transform GetWeaponBindingPoint(GameObject character)
             => character.transform
                 .Find(CAMERA_ROOT_NAME)
                 .Find(WEAPON_ROOT_NAME);
